@@ -5,8 +5,8 @@
 **Внимание!** Это тестовая программа (макет), вместо реальных банков будут использоваться шаблоны написанные вручную.
 
 ## Разработчики
-https://github.com/Ekrosrb/ - телеграм бот.  
-https://github.com/andrevbnk - сервер, работа с бд.
-https://github.com/LeapSunrise - шаблоны банков.
+https://github.com/Ekrosrb/ - телеграм бот;  
+https://github.com/andrevbnk - сервер, работа с бд;
+https://github.com/LeapSunrise - шаблоны банков;
 
 
