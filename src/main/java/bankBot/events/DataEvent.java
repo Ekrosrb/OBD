@@ -13,8 +13,8 @@ import com.google.gson.JsonPrimitive;
 
 import java.util.*;
 
-public class MyEvent implements EventListener {
-    public MyEvent(TelegramBot t, Host host){
+public class DataEvent implements EventListener {
+    public DataEvent(TelegramBot t, Host host){
         this.t = t;
         this.host = host;
         users = new ArrayList<>();
