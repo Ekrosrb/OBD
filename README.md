@@ -15,7 +15,7 @@ https://github.com/alwayswannachange - шаблоны банков
 
 1. Подключение к боту и добавление базового функционала.
 
-```Java
+```java
         String token = ""; //Здесь должен быть токен.
         TelegramBot t = new TelegramBot(token);
         Host host = new Host(""); //url сервера который связывается с api банков.
@@ -23,6 +23,7 @@ https://github.com/alwayswannachange - шаблоны банков
         t.addEventListener(new RateEvent(t, host));
         t.connect();
 ```
+
 Класс **TelegramBot** служит для подключения в боту. Достаточно просто указать token и вызвать connect().  
 Класс **Host** нужен для связи с сервером который управляет операциями с токеном и взаимодействует с api банков.  
 addEventListener(EventListener eventListener) - Добавляет выбраный обработчик событий.   
@@ -31,7 +32,7 @@ addEventListener(EventListener eventListener) - Добавляет выбран�
 
 2. Создание своих обработчиков событий.
 
-```Java
+```java
 public class MyEvent implements EventListener {
     public MyEvent(TelegramBot t, Host host){
         this.t = t;
@@ -49,3 +50,25 @@ public class MyEvent implements EventListener {
 Через поле update можно получить всю необходимую информацию, например: update.getMessage().getText() - вернет текс сообщения.
 
 3. Отправка сообщений.
+
+Для отправки сообщений используется метод sendMessage из класса **TelegramBot**.  
+```java
+public class MyEvent implements EventListener {
+    public MyEvent(TelegramBot t, Host host){
+        this.t = t;
+        this.host = host;
+    }
+    private Host host;
+    private TelegramBot t;
+    @Override
+    public void onEventListener(IUpdate update) {
+        String mess = update.getMessage().getText();
+        t.sendMessage(update.getMessage().getChat(), "Your message: " + mess);
+    }
+}
+```
+Так же можно отправлять сообщения с пользовательскими кнопками.
+```java
+        t.sendMessage(update.getMessage().getChat(), "Your message", new String[]{"button1", "button2", "button3"});
+```
+Названия кнопок передаём массивом строк.
