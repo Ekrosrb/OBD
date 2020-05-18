@@ -79,7 +79,7 @@ public class Host {
 
     private Thread update;
     /***/
-    public void sendData(String data){
+    public boolean sendData(String data){
 
         try {
             URL obj = new URL(url + "/test");
@@ -102,9 +102,10 @@ public class Host {
             for(;(line = in.readLine()) != null;){
                 sb.append(line);
             }
-
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
     /**

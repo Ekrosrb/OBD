@@ -89,13 +89,18 @@ public class DataEvent implements EventListener {
                     JsonObject data = new JsonObject();
                     data.add("id", new JsonPrimitive(user.getId()));
                     data.add("token", new JsonPrimitive(update.getMessage().getText()));
-                    host.sendData(data.toString());
+                    boolean isAdd = host.sendData(data.toString());
                     for (int i = 0; i < users.size(); i++) {
                         if (users.get(i) == user.getId()) {
                             users.remove(i);
                         }
                     }
-                    t.sendMessage(update.getMessage().getChat(), "Токен банка был успешно добавлен.", menu);
+                    if(isAdd) {
+                        t.sendMessage(update.getMessage().getChat(), "Токен банка был успешно добавлен.", menu);
+                    }else{
+                        t.sendMessage(update.getMessage().getChat(), "На данных момент сервер не отвечает, " +
+                                "попробуйте позже.", menu);
+                    }
                 }
 
                 break;
