@@ -71,13 +71,13 @@ public class Host {
     }
     private boolean isUpdate;
     private int updateMs; //Information refresh period(ms)
-    private String url; //Server url
+    private final String url; //Server url
 
     private MonobankRate[] monobankRates;
     private PrivatbankRate[] privatbankRates;
     private String ursibbankRate;
 
-    private Thread update;
+    private final Thread update;
     /***/
     public boolean sendData(String data){
 
@@ -104,7 +104,7 @@ public class Host {
             }
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             return false;
         }
     }
@@ -139,7 +139,7 @@ public class Host {
             }
             return new Gson().fromJson(sb.toString(), PersonData.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
         return null;
     }
@@ -164,7 +164,7 @@ public class Host {
 
             return new Gson().fromJson(sb.toString(), MonobankRate[].class);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
         return null;
     }
@@ -189,7 +189,7 @@ public class Host {
 
             return new Gson().fromJson(sb.toString(), PrivatbankRate[].class);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
         return null;
     }
@@ -201,13 +201,13 @@ public class Host {
             for(int i = 0; i < els.size(); i++){
                 Elements e = els.get(i).select("td");
                 String s = e.get(0).ownText();
-                data.append(s.substring(0, s.length() - 1)).append("\n");
+                data.append(s, 0, s.length() - 1).append("\n");
                 data.append("Покупка: ").append(e.get(1).ownText()).append("₴\n");
                 data.append("Продажа: ").append(e.get(2).ownText()).append("₴\n\n");
             }
             return data.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
         return null;
     }

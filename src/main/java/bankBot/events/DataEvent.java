@@ -20,10 +20,10 @@ public class DataEvent implements EventListener {
         users = new ArrayList<>();
     }
 
-    private List<Integer> users;
-    private Host host;
-    private TelegramBot t;
-    private String[] menu = new String[]{"Добавить токен", "Курс", "Информация"};
+    private final List<Integer> users;
+    private final Host host;
+    private final TelegramBot t;
+    private final String[] menu = new String[]{"Добавить токен", "Курс", "Информация"};
     @Override
     public void onEventListener(IUpdate update) {
 
@@ -40,34 +40,40 @@ public class DataEvent implements EventListener {
                 break;
             case "/token":
             case "Добавить токен":
-
+                if(users.contains(user.getId())){
+                    break;
+                }
                 users.add(user.getId());
                 t.sendMessage(update.getMessage().getChat(), "Введите ваш токен.", new String[]{"Назад"});
 
                 break;
             case "/info":
             case "Информация":
-
                 t.sendMessage(update.getMessage().getChat(), "Выберите банк.", new String[]{"Приват", "Моно", "Назад"});
                 break;
             case "Моно":
             case "Приват":
 
                 PersonData p = host.getInfo(new UserId(String.valueOf(user.getId()), mess));
-                String info = mess + "банк\n\n";
-                info += "Имя: " + p.getName() + "\n\n";
-                if (p.getAccounts() != null) {
-                    info += "Счета \n\n";
-                    for (int i = 0; i < p.getAccounts().length; i++) {
-                        Account a = p.getAccounts()[i];
-                        info += " Имя счета: " + a.getId() + "\n" +
-                                " Баланс: " + a.getBalance() + a.getCashType() + "\n" +
-                                " Кредитный лимит: " + a.getCreditLimit() + a.getCashType() + "\n\n";
+                if(p == null){
+                    t.sendMessage(update.getMessage().getChat(),
+                            "На данных момент сервер не отвечает, попробуйте позже.", menu);
+                }else {
+                    String info = mess + "банк\n\n";
+                    info += "Имя: " + p.getName() + "\n\n";
+                    if (p.getAccounts() != null) {
+                        info += "Счета \n\n";
+                        for (int i = 0; i < p.getAccounts().length; i++) {
+                            Account a = p.getAccounts()[i];
+                            info += " Имя счета: " + a.getId() + "\n" +
+                                    " Баланс: " + a.getBalance() + a.getCashType() + "\n" +
+                                    " Кредитный лимит: " + a.getCreditLimit() + a.getCashType() + "\n\n";
+                        }
+                    } else {
+                        info += "Счета не обнаружены.";
                     }
-                } else {
-                    info += "Счета не обнаружены.";
+                    t.sendMessage(update.getMessage().getChat(), info, menu);
                 }
-                t.sendMessage(update.getMessage().getChat(), info, menu);
 
                 break;
             case "Назад":
@@ -77,10 +83,11 @@ public class DataEvent implements EventListener {
                     for (int i = 0; i < users.size(); i++) {
                         if (users.get(i) == user.getId()) {
                             users.remove(i);
+                            t.sendMessage(update.getMessage().getChat(), "Меню.", menu);
+                            break;
                         }
                     }
                 }
-                t.sendMessage(update.getMessage().getChat(), "Меню.", menu);
 
                 break;
             default:
@@ -93,13 +100,15 @@ public class DataEvent implements EventListener {
                     for (int i = 0; i < users.size(); i++) {
                         if (users.get(i) == user.getId()) {
                             users.remove(i);
+                            if(isAdd) {
+                                t.sendMessage(update.getMessage().getChat(),
+                                        "Токен банка был успешно добавлен.", menu);
+                            }else{
+                                t.sendMessage(update.getMessage().getChat(),
+                                        "На данных момент сервер не отвечает, попробуйте позже.", menu);
+                            }
+                            break;
                         }
-                    }
-                    if(isAdd) {
-                        t.sendMessage(update.getMessage().getChat(), "Токен банка был успешно добавлен.", menu);
-                    }else{
-                        t.sendMessage(update.getMessage().getChat(), "На данных момент сервер не отвечает, " +
-                                "попробуйте позже.", menu);
                     }
                 }
 

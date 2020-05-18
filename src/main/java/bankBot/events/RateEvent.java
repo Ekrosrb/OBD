@@ -16,10 +16,10 @@ public class RateEvent implements EventListener {
         this.t = t;
     }
 
-    private TelegramBot t;
-    private Host host;
-    private String[] menu = new String[]{"Добавить токен", "Курс", "Информация"};
-    private String[] rateMenu = new String[]{"Монобанк", "Приватбанк", "УкрСибБанк", "Назад"};
+    private final TelegramBot t;
+    private final Host host;
+    private final String[] menu = new String[]{"Добавить токен", "Курс", "Информация"};
+    private final String[] rateMenu = new String[]{"Монобанк", "Приватбанк", "УкрСибБанк", "Назад"};
 
     @Override
     public void onEventListener(IUpdate update) {
@@ -27,41 +27,51 @@ public class RateEvent implements EventListener {
         if(mess.equals("/rate") || mess.equals("Курс")){
             t.sendMessage(update.getMessage().getChat(), "Введите название банка.", rateMenu);
         }else{
-            if(mess.equals("Монобанк")) {
+            switch (mess) {
+                case "Монобанк": {
 
-                MonobankRate[] r = host.getMonobankRates();
-                String data = "Курс Monobank \n\n";
-                for (int i = 0; i < r.length; i++) {
-                    if (r[i].getRateBuy() == 0.0 && r[i].getRateSell() == 0.0) {
-                        continue;
+                    MonobankRate[] r = host.getMonobankRates();
+                    if(r != null) {
+                        String data = "Курс Monobank \n\n";
+                        for (MonobankRate monobankRate : r) {
+                            if (monobankRate.getRateBuy() == 0.0 && monobankRate.getRateSell() == 0.0) {
+                                continue;
+                            }
+                            Currency a = getCurrencyInstance(monobankRate.getCurrencyCodeA());
+                            Currency b = getCurrencyInstance(monobankRate.getCurrencyCodeB());
+                            data += a.getCurrencyCode() + "\n";
+                            data += "Покупка: " + monobankRate.getRateBuy() + b.getSymbol() + "\n";
+                            data += "Продажа: " + monobankRate.getRateSell() + b.getSymbol();
+                            data += "\n\n";
+                        }
+                        t.sendMessage(update.getMessage().getChat(), data, rateMenu);
                     }
-                    Currency a = getCurrencyInstance(r[i].getCurrencyCodeA());
-                    Currency b = getCurrencyInstance(r[i].getCurrencyCodeB());
-                    data += a.getCurrencyCode() + "\n";
-                    data += "Покупка: " + r[i].getRateBuy() + b.getSymbol() + "\n";
-                    data += "Продажа: " + r[i].getRateSell() + b.getSymbol();
-                    data += "\n\n";
+                    break;
                 }
-                t.sendMessage(update.getMessage().getChat(), data, rateMenu);
-            }else if(mess.equals("Приватбанк")){
-                PrivatbankRate[] r = host.getPrivatbankRates();
-                String data = "Курс PrivatBank \n\n";
-                for (int i = 0; i < r.length; i++) {
-                    Currency a = Currency.getInstance(r[i].getBaseCcy());
-                    data += r[i].getCcy() + "\n";
-                    data += "Покупка: " + r[i].getRateBuy() + a.getSymbol() + "\n";
-                    data += "Продажа: " + r[i].getRateSell() + a.getSymbol();
-                    data += "\n\n";
+                case "Приватбанк": {
+                    PrivatbankRate[] r = host.getPrivatbankRates();
+                    if(r != null) {
+                        String data = "Курс PrivatBank \n\n";
+                        for (PrivatbankRate privatbankRate : r) {
+                            Currency a = Currency.getInstance(privatbankRate.getBaseCcy());
+                            data += privatbankRate.getCcy() + "\n";
+                            data += "Покупка: " + privatbankRate.getRateBuy() + a.getSymbol() + "\n";
+                            data += "Продажа: " + privatbankRate.getRateSell() + a.getSymbol();
+                            data += "\n\n";
+                        }
+                        t.sendMessage(update.getMessage().getChat(), data, rateMenu);
+                    }
+                    break;
                 }
-                t.sendMessage(update.getMessage().getChat(), data, rateMenu);
-            }else if(mess.equals("УкрСибБанк")){
-                Thread getData = new Thread(()->{
-                    IUpdate u = update;
-                    t.sendMessage(u.getMessage().getChat(), host.getUrsibbankRate(), rateMenu);
-                });
-                getData.start();
-            }else if(mess.equals("Назад") || mess.equals("/back")){
-                t.sendMessage(update.getMessage().getChat(), "Меню.", menu);
+                case "УкрСибБанк":
+                    if(host.getUrsibbankRate() != null) {
+                        t.sendMessage(update.getMessage().getChat(), host.getUrsibbankRate(), rateMenu);
+                    }
+                    break;
+                case "Назад":
+                case "/back":
+                    t.sendMessage(update.getMessage().getChat(), "Меню.", menu);
+                    break;
             }
         }
     }
