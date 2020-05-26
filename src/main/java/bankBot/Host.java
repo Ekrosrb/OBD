@@ -43,9 +43,9 @@ public class Host {
             monobankRates = monoRate();
             privatbankRates = privatRate();
             ursibbankRate = uksibBank();
-            System.out.println("Данные о курсах валют загружены. " + new Date().toString());
+            System.out.println("Currency rates are uploaded." + new Date().toString());
         }catch (Exception e){
-            System.out.println("При получении данных произошла ошибка:");
+            System.out.println("An error occurred while getting the data:");
             System.out.println(e.getMessage());
         }
         update = new Thread(()->{
@@ -56,9 +56,9 @@ public class Host {
                         monobankRates = monoRate();
                         privatbankRates = privatRate();
                         ursibbankRate = uksibBank();
-                        System.out.println("Данные о курсах валют загружены. " + new Date().toString());
+                        System.out.println("Currency rates are uploaded. " + new Date().toString());
                     }catch (Exception e){
-                        System.out.println("При получении данных произошла ошибка:");
+                        System.out.println("An error occurred while getting the data:");
                         System.out.println(e.getMessage());
                     }
                     last = new Date();
@@ -202,8 +202,8 @@ public class Host {
                 Elements e = els.get(i).select("td");
                 String s = e.get(0).ownText();
                 data.append(s, 0, s.length() - 1).append("\n");
-                data.append("Покупка: ").append(e.get(1).ownText()).append("₴\n");
-                data.append("Продажа: ").append(e.get(2).ownText()).append("₴\n\n");
+                data.append("Buy: ").append(e.get(1).ownText()).append("₴\n");
+                data.append("Sale: ").append(e.get(2).ownText()).append("₴\n\n");
             }
             return data.toString();
         } catch (IOException e) {

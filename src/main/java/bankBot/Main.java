@@ -7,9 +7,9 @@ import botapi.util.TelegramBot;
 
 public class Main {
     public static void main(String[] args) {
-        String token = "1095042140:AAHOvhoYy8ntMZjaui6KrdOHLg9Ybdllb9Q"; //Здесь должен быть токен.
+        String token = ""; //There should be a token.
         TelegramBot t = new TelegramBot(token);
-        Host host = new Host(""); //url сервера который связывается с api банков.
+        Host host = new Host(""); //server url which communicates with banks api.
         t.addEventListener(new DataEvent(t, host));
         t.addEventListener(new RateEvent(t, host));
         t.connect();

@@ -23,7 +23,7 @@ public class DataEvent implements EventListener {
     private final List<Integer> users;
     private final Host host;
     private final TelegramBot t;
-    private final String[] menu = new String[]{"Добавить токен", "Курс", "Информация"};
+    private final String[] menu = new String[]{"Add token", "Exchange Rates", "Information"};
     @Override
     public void onEventListener(IUpdate update) {
 
@@ -33,57 +33,57 @@ public class DataEvent implements EventListener {
             case "/start":
 
                 t.sendMessage(update.getMessage().getChat(),
-                        "/token - добавляет токен вашего банка.\n" +
-                                "/rate - просмотр курса валют.\n" +
-                                "/info - информация о счетах, депозитах и т.д.", menu);
+                        "/token - Adds your bank token.\n" +
+                                "/rate - view exchange rates.\n" +
+                                "/info - information about accounts, deposits, etc. ", menu);
 
                 break;
             case "/token":
-            case "Добавить токен":
+            case "Add token":
                 if(users.contains(user.getId())){
                     break;
                 }
                 users.add(user.getId());
-                t.sendMessage(update.getMessage().getChat(), "Введите ваш токен.", new String[]{"Назад"});
+                t.sendMessage(update.getMessage().getChat(), "Enter your token.", new String[]{"Back"});
 
                 break;
             case "/info":
-            case "Информация":
-                t.sendMessage(update.getMessage().getChat(), "Выберите банк.", new String[]{"Приват", "Моно", "Назад"});
+            case "Information":
+                t.sendMessage(update.getMessage().getChat(), "Choose a bank.", new String[]{"Private", "Mono", "Back"});
                 break;
-            case "Моно":
-            case "Приват":
+            case "Mono":
+            case "Private":
 
                 PersonData p = host.getInfo(new UserId(String.valueOf(user.getId()), mess));
                 if(p == null){
                     t.sendMessage(update.getMessage().getChat(),
-                            "На данных момент сервер не отвечает, попробуйте позже.", menu);
+                            "At the moment the server does not respond, try again later.", menu);
                 }else {
                     String info = mess + "банк\n\n";
-                    info += "Имя: " + p.getName() + "\n\n";
+                    info += "Name:" + p.getName() + "\n\n";
                     if (p.getAccounts() != null) {
-                        info += "Счета \n\n";
+                        info += "Accounts \n\n";
                         for (int i = 0; i < p.getAccounts().length; i++) {
                             Account a = p.getAccounts()[i];
-                            info += " Имя счета: " + a.getId() + "\n" +
-                                    " Баланс: " + a.getBalance() + a.getCashType() + "\n" +
-                                    " Кредитный лимит: " + a.getCreditLimit() + a.getCashType() + "\n\n";
+                            info += " Account Name: " + a.getId() + "\n" +
+                                    " Balance: " + a.getBalance() + a.getCashType() + "\n" +
+                                    " Credit limit: " + a.getCreditLimit() + a.getCashType() + "\n\n";
                         }
                     } else {
-                        info += "Счета не обнаружены.";
+                        info += "No accounts were found.";
                     }
                     t.sendMessage(update.getMessage().getChat(), info, menu);
                 }
 
                 break;
-            case "Назад":
+            case "Back":
             case "/back":
 
                 if (users.contains(user.getId())) {
                     for (int i = 0; i < users.size(); i++) {
                         if (users.get(i) == user.getId()) {
                             users.remove(i);
-                            t.sendMessage(update.getMessage().getChat(), "Меню.", menu);
+                            t.sendMessage(update.getMessage().getChat(), "Menu.", menu);
                             break;
                         }
                     }
@@ -102,10 +102,10 @@ public class DataEvent implements EventListener {
                             users.remove(i);
                             if(isAdd) {
                                 t.sendMessage(update.getMessage().getChat(),
-                                        "Токен банка был успешно добавлен.", menu);
+                                        "Bank token has been successfully added.", menu);
                             }else{
                                 t.sendMessage(update.getMessage().getChat(),
-                                        "На данных момент сервер не отвечает, попробуйте позже.", menu);
+                                        "At the moment the server does not respond, try again later.", menu);
                             }
                             break;
                         }

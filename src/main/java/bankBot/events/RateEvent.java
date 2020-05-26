@@ -18,21 +18,21 @@ public class RateEvent implements EventListener {
 
     private final TelegramBot t;
     private final Host host;
-    private final String[] menu = new String[]{"Добавить токен", "Курс", "Информация"};
-    private final String[] rateMenu = new String[]{"Монобанк", "Приватбанк", "УкрСибБанк", "Назад"};
+    private final String[] menu = new String[]{"Add token", "Exchange Rates", "Information"};
+    private final String[] rateMenu = new String[]{"Monobank", "Privatbank", "UkrSibBank", "Back"};
 
     @Override
     public void onEventListener(IUpdate update) {
         String mess = update.getMessage().getText();
-        if(mess.equals("/rate") || mess.equals("Курс")){
-            t.sendMessage(update.getMessage().getChat(), "Введите название банка.", rateMenu);
+        if(mess.equals("/rate") || mess.equals("Exchange Rates")){
+            t.sendMessage(update.getMessage().getChat(), "Enter the name of the bank.", rateMenu);
         }else{
             switch (mess) {
-                case "Монобанк": {
+                case "Monobank": {
 
                     MonobankRate[] r = host.getMonobankRates();
                     if(r != null) {
-                        String data = "Курс Monobank \n\n";
+                        String data = "Monobank exchange rate \n\n";
                         for (MonobankRate monobankRate : r) {
                             if (monobankRate.getRateBuy() == 0.0 && monobankRate.getRateSell() == 0.0) {
                                 continue;
@@ -40,37 +40,37 @@ public class RateEvent implements EventListener {
                             Currency a = getCurrencyInstance(monobankRate.getCurrencyCodeA());
                             Currency b = getCurrencyInstance(monobankRate.getCurrencyCodeB());
                             data += a.getCurrencyCode() + "\n";
-                            data += "Покупка: " + monobankRate.getRateBuy() + b.getSymbol() + "\n";
-                            data += "Продажа: " + monobankRate.getRateSell() + b.getSymbol();
+                            data += "Buy: " + monobankRate.getRateBuy() + b.getSymbol() + "\n";
+                            data += "Sale: " + monobankRate.getRateSell() + b.getSymbol();
                             data += "\n\n";
                         }
                         t.sendMessage(update.getMessage().getChat(), data, rateMenu);
                     }
                     break;
                 }
-                case "Приватбанк": {
+                case "Privatbank": {
                     PrivatbankRate[] r = host.getPrivatbankRates();
                     if(r != null) {
-                        String data = "Курс PrivatBank \n\n";
+                        String data = "PrivatBank exchange rate\n\n";
                         for (PrivatbankRate privatbankRate : r) {
                             Currency a = Currency.getInstance(privatbankRate.getBaseCcy());
                             data += privatbankRate.getCcy() + "\n";
-                            data += "Покупка: " + privatbankRate.getRateBuy() + a.getSymbol() + "\n";
-                            data += "Продажа: " + privatbankRate.getRateSell() + a.getSymbol();
+                            data += "Buy: " + privatbankRate.getRateBuy() + a.getSymbol() + "\n";
+                            data += "Sale: " + privatbankRate.getRateSell() + a.getSymbol();
                             data += "\n\n";
                         }
                         t.sendMessage(update.getMessage().getChat(), data, rateMenu);
                     }
                     break;
                 }
-                case "УкрСибБанк":
+                case "UkrSibBank":
                     if(host.getUrsibbankRate() != null) {
                         t.sendMessage(update.getMessage().getChat(), host.getUrsibbankRate(), rateMenu);
                     }
                     break;
-                case "Назад":
+                case "Back":
                 case "/back":
-                    t.sendMessage(update.getMessage().getChat(), "Меню.", menu);
+                    t.sendMessage(update.getMessage().getChat(), "Menu.", menu);
                     break;
             }
         }

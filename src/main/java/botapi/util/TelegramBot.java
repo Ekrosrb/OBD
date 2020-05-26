@@ -52,6 +52,7 @@ public class TelegramBot {
         connect = false;
         System.out.println("Connection close.");
     }
+
     private boolean connect;
     private String token;
     private List<EventListener> events;

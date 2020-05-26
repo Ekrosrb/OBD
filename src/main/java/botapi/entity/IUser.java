@@ -1,6 +1,6 @@
 package botapi.entity;
-/*
-* id	Integer	Unique identifier for this user or bot
+/**
+ id	Integer	Unique identifier for this user or bot
 is_bot	Boolean	True, if this user is a bot
 first_name	String	User‘s or bot’s first name
 last_name	String	Optional. User‘s or bot’s last name
