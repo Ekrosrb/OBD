@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 public class TelegramBotTest extends Assert {
 
 
-    private String token = "1095042140:AAHOvhoYy8ntMZjaui6KrdOHLg9Ybdllb9Q";
+    private String token = "";  //Токен бота, иначе тесты не заработают.
 
     @Test
     public void getUpdateTest(){
