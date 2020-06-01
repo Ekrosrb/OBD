@@ -20,7 +20,7 @@ https://github.com/LeapSunrise - шаблоны банков
 
 
 ## Server
-https://github.com/andrevbnk/telega
+https://github.com/LeapSunrise/Kall
 
 
 ## How to use (Client)
