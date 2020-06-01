@@ -16,7 +16,7 @@ https://github.com/Ekrosrb/ - телеграм бот
 
 https://github.com/andrevbnk - сервер, работа с бд
 
-https://github.com/alwayswannachange - шаблоны банков
+https://github.com/LeapSunrise - шаблоны банков
 
 
 ## Server
